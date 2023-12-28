@@ -1,28 +1,29 @@
-// index.js
-const express = require('express');
-const mysql2 = require('./src/config/mysql2');
-
-const app = express()
-const PORT = 4000
-
-// open mysql2 connection
-mysql2.sequelize.sync().then(() => {
-  console.log("Synced db.");
-}).catch((err) => {
-  console.log("Failed to sync db: " + err.message);
-});
-
-app.listen(PORT, () => {
-  console.log(`API listening on PORT ${PORT} `)
-})
-
-app.get('/', (req, res) => {
-  res.send('Hey this is my API running 🥳')
-})
-
-app.get('/about', (req, res) => {
-  res.send('This is my about route..... ')
-})
-
-// Export the Express API
-module.exports = app
+// Import express
+import express from "express";
+// Import cors
+import cors from "cors";
+// Import connection
+import db from "./src/config/database.js";
+// Import router
+import Router from "./src/routes/api/v1/index.js";
+ 
+// Init express
+const app = express();
+// use express json
+app.use(express.json());
+// use cors
+app.use(cors());
+ 
+// Testing database connection 
+try {
+    await db.authenticate();
+    console.log('Connection has been established successfully.');
+} catch (error) {
+    console.error('Unable to connect to the database:', error);
+}
+ 
+// use router
+app.use(Router);
+ 
+// listen on port
+app.listen(5000, () => console.log('Server running at http://localhost:5000'));
