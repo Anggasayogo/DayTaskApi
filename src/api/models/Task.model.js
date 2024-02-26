@@ -7,28 +7,34 @@ import db from "../../config/database.js";
 const { DataTypes } = Sequelize;
  
 // Define schema
-const Users = db.define('users', {
+const Task = db.define('task', {
   // Define attributes
-  role_id: {
+  id_point: {
     type: DataTypes.INTEGER
   },
-  divisi_id: {
+  id_reward: {
     type: DataTypes.INTEGER
   },
-  username: {
+  task_name: {
     type: DataTypes.STRING
   },
-  email: {
+  task_progres: {
     type: DataTypes.STRING
   },
-  password: {
+  task_date: {
+    type: DataTypes.DATE
+  },
+  task_duedate: {
+    type: DataTypes.DATE
+  },
+  task_docs: {
     type: DataTypes.STRING
   },
-  phone: {
-    type: DataTypes.STRING
+  id_pic: {
+    type: DataTypes.INTEGER
   },
-  avatar: {
-    type: DataTypes.STRING
+  id_svp: {
+    type: DataTypes.INTEGER
   },
 },{
   // Freeze Table Name
@@ -36,4 +42,4 @@ const Users = db.define('users', {
 });
  
 // Export model Product
-export default Users;
+export default Task;
