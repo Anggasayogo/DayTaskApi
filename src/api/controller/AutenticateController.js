@@ -70,10 +70,18 @@ export const login = async (req, res) => {
     }
 }
 
-export const getUsersList = async (req,res) => {
+export const getUsersList = async (req, res) => {
     try {
-        const userList = await Users.findAll();
-        res.send(userList)
+        const user = await Users.findAll({
+            attributes: [
+                ['id','user_id'],
+                ['username','username'],
+                ['email','email'],
+                ['phone','phone'],
+                ['avatar','avatar'],
+            ]
+        });
+        res.send(user)
     } catch (error) {
          res.status(500).json({ 
             error: 'Failed get user list' 
