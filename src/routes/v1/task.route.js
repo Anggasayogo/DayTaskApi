@@ -1,7 +1,15 @@
 import {Router} from "express";
-import { getTaskById } from "../../api/controller/TaskController";
+import {
+    getTaskList,
+    getTaskById,
+    getTaskListByUserId,
+    createNassignTask
+} from '../../api/controller/TaskController.js'
 const router = Router();
 
-router.post('/list', getTaskById)
+router.get('/list', getTaskList)
+router.get('/detail/:id', getTaskById)
+router.get('/user/list/:id', getTaskListByUserId)
+router.post('/create', createNassignTask)
 
 export default router

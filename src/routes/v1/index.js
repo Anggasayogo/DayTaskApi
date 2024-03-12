@@ -1,9 +1,9 @@
 // Import express
 import { Router } from "express"; 
+import Task from "./task.route.js"
 import Products from "./products.route.js"
 import Authenticate from "./authenticate.route.js"
 import verifyToken from "../../api/middleware/authMiddleware.js";
-import Task from "../../api/models/Task.model.js";
 // Init express router
 const router = Router();
  

@@ -12,9 +12,6 @@ const Task = db.define('task', {
   id_point: {
     type: DataTypes.INTEGER
   },
-  id_reward: {
-    type: DataTypes.INTEGER
-  },
   task_name: {
     type: DataTypes.STRING
   },
