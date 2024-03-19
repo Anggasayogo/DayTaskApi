@@ -26,10 +26,14 @@ export const getTaskById = async (req, res) => {
     });
 
     if (product?.length > 0) {
-      res.send(product[0]);
+      res.status(200).json({
+        error: "Task id not found",
+        data: product[0],
+      });
     } else {
       res.status(404).json({
         error: "Task id not found",
+        data: null,
       });
     }
   } catch (err) {
@@ -51,7 +55,8 @@ export const getTaskListByUserId = async (req, res) => {
       });
     } else {
       res.status(404).json({
-        error: "user id not found",
+        status: "user id not be found",
+        data: [],
       });
     }
   } catch (err) {
@@ -112,3 +117,27 @@ export const createNassignTask = async (req, res) => {
     });
   }
 };
+
+
+export const destroyTask = async (req,res) => {
+  try {
+    const taskDestroyed = await Task.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    if(taskDestroyed === 1){
+      res.status(200).json({
+        status: "Success destroying task",
+      });
+    }else{
+      res.status(400).json({
+        status: "failed destroying task",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: "Error when deleting task",
+    });
+  }
+}
