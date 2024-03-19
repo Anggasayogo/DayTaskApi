@@ -1,16 +1,16 @@
 // Import model Product
-import { QueryTypes } from 'sequelize'
+import { QueryTypes } from "sequelize";
 import db from "../../config/database.js";
 import Task from "../models/Task.model.js";
-import { getTaskByUserId } from "../rawQuery/rawQuery.js";
+import { getTaskByTaskId, getTaskByUserId } from "../rawQuery/rawQuery.js";
 
 // Get semua product
 export const getTaskList = async (req, res) => {
   try {
     const taskList = await Task.findAll();
     res.status(200).json({
-      status: 'successfuly',
-      data: taskList
+      status: "successfuly",
+      data: taskList,
     });
   } catch (err) {
     res.status(500).json({
@@ -21,11 +21,10 @@ export const getTaskList = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
   try {
-    const product = await Task.findAll({
-      where: {
-        id: req.params.id,
-      },
+    const product = await db.query(getTaskByTaskId(req.params.id), {
+      type: QueryTypes.SELECT,
     });
+
     if (product?.length > 0) {
       res.send(product[0]);
     } else {
@@ -42,11 +41,13 @@ export const getTaskById = async (req, res) => {
 
 export const getTaskListByUserId = async (req, res) => {
   try {
-    const product = await db.query(getTaskByUserId(req.params.id), { type: QueryTypes.SELECT })
+    const product = await db.query(getTaskByUserId(req.params.id), {
+      type: QueryTypes.SELECT,
+    });
     if (product?.length > 0) {
       res.status(200).json({
-        status: 'success',
-        data: product
+        status: "success",
+        data: product,
       });
     } else {
       res.status(404).json({
