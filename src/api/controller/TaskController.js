@@ -141,3 +141,52 @@ export const destroyTask = async (req,res) => {
     });
   }
 }
+
+
+export const updateTask = async (req,res) => {
+  try {
+    const {
+      id_task,
+      id_point,
+      task_name,
+      task_progres,
+      task_date,
+      task_duedate,
+      task_docs,
+      id_pic,
+      id_svp,
+    } = req.body;
+
+    //  create and assign task
+    const newTaskData = {
+      id_point: id_point,
+      task_name: task_name,
+      task_progres: task_progres,
+      task_date: new Date(task_date),
+      task_duedate: new Date(task_duedate),
+      task_docs: task_docs,
+      id_pic: id_pic,
+      id_svp: id_svp,
+    };
+
+    const taskUpdated = await Task.update(newTaskData, {
+      where: {
+        id: id_task
+      }
+    });
+    
+    if(taskUpdated?.[0] === 1){
+      res
+        .status(201)
+        .json({ message: "Task updated successfully", data: newTaskData });
+    }else{
+      res.status(400).json({
+        status: "failed updating task",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: "Error when updating task",
+    });
+  }
+}

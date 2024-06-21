@@ -23,7 +23,7 @@ app.get('/', async (req, res) => {
 })
 
 // if error is not an instanceOf APIError, convert it.
-app.use(converter);
+// app.use(converter);
 // catch 404 and forward to error handler
 app.use(notFound);
 // error handler, send stacktrace only during development

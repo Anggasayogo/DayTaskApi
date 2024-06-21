@@ -1,8 +1,8 @@
 // import sequelize
-import { Sequelize } from "sequelize";
+import sqlize from "sequelize";
  
 // create connection
-const db = new Sequelize('todaytask', 'root', '', {
+const db = new sqlize.Sequelize('todaytask', 'root', '', {
     host: 'localhost',
     dialect: 'mysql'
 });
