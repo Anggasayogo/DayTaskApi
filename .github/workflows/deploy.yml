@@ -18,8 +18,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: whoami
           script: |
+            whoami
             cd DayTaskApi
             git pull
             git merge origin/master
