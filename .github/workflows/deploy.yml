@@ -29,3 +29,5 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             ls
+            cd DayTaskApi
+            ls
