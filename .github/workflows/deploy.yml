@@ -32,4 +32,6 @@ jobs:
             cd DayTaskApi
             git pull origin master
             git merge
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh   
             npm install
