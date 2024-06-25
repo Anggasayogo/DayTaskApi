@@ -26,9 +26,32 @@ export const getTaskByTaskId = (id) => {
 
 export const getRankListQuery = () => {
   return (
-    "SELECT t.task_name, t.id_point, p.point "+
-    "FROM task t "+
-    "INNER JOIN point p ON t.id_point = p.id_point "+
-    "ORDER BY p.point DESC"
+    "WITH total_points AS ( "+
+      "SELECT "+
+          "u.id AS user_id,"+
+          "u.username AS username,"+
+          "SUM(p.point) AS total_point,"+
+          "RANK() OVER (ORDER BY SUM(p.point) DESC) AS ranking "+
+      "FROM "+
+          "users u "+
+      "JOIN "+
+          "task t ON u.id = t.id_pic "+
+      "JOIN "+
+          "point p ON t.id_point = p.id_point "+
+      "GROUP BY "+
+          "u.id, u.username "+
+  ") " +
+  
+  "SELECT "+
+      "user_id,"+
+      "username,"+
+      "total_point,"+
+      "ranking "+
+  "FROM "+
+      "total_points "+
+  "WHERE "+
+      "ranking BETWEEN 1 AND 10 "+
+  "ORDER BY "+
+      "ranking;" 
   )
 }

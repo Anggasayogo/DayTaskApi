@@ -1,4 +1,5 @@
 import db from "./src/config/database.js";
+import { envStation } from "./src/config/envoirmentStation.js";
 import app from "./src/config/express.js";
 
 // Testing database connection 
@@ -10,4 +11,4 @@ try {
 }
  
 // listen on port
-app.listen(5001, () => console.log('Server running at http://localhost:5001'));
+app.listen(envStation?.APP_PORT, () => console.log('Server running at http://localhost:5001'));
