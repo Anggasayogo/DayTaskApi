@@ -18,9 +18,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: |
-            cd ~/DayTaskApi
-            git pull
-            git merge origin/master
-            npm install
-            pm2 reload daytask
+          script: whoami
