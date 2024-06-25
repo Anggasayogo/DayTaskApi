@@ -32,3 +32,4 @@ jobs:
             cd DayTaskApi
             git pull origin master
             git merge
+            npm install
