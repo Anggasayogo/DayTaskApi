@@ -1,18 +1,27 @@
-name: Deploy to Ubuntu
+name: Deploy
 
 on:
   push:
-    branches:
-      - master
+    branches: [main]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+
+      - name: Run install
+        run: npm install
+        
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        env:
+          YOUR_SECRET: ${{ secrets.YOUR_SECRET }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
