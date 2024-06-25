@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -11,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Deploy to server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
@@ -20,6 +21,6 @@ jobs:
           script: |
             cd ~/DayTaskApi
             git pull
-            git merge master
+            git merge origin/master
             npm install
             pm2 reload daytask
