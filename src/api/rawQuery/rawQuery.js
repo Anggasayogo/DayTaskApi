@@ -38,6 +38,8 @@ export const getRankListQuery = () => {
           "task t ON u.id = t.id_pic "+
       "JOIN "+
           "point p ON t.id_point = p.id_point "+
+      "WHERE "+
+        "t.task_progres = 'success' "+
       "GROUP BY "+
           "u.id, u.username "+
   ") " +
