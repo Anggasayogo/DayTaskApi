@@ -28,10 +28,8 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            ls
             cd DayTaskApi
-            git pull origin master
-            git merge
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh   
+            git pull
+            git merge origin/master
             npm install
+            pm2 reload daytask
