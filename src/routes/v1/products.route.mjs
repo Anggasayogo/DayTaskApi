@@ -5,7 +5,7 @@ import {
     createProduct,
     updateProduct,
     deleteProduct
-} from "../../api/controller/ProductController.js";
+} from "../../api/controller/ProductController.mjs";
 const router = Router();
 
 // Route get semua product

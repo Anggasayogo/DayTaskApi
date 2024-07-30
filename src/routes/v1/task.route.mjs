@@ -6,7 +6,7 @@ import {
     getTaskById,
     getTaskListByUserId,
     createNassignTask
-} from '../../api/controller/TaskController.js'
+} from '../../api/controller/TaskController.mjs'
 const router = Router();
 
 router.get('/list', getTaskList)

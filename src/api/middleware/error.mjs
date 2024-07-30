@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import expressValidation from "express-validation";
-import APIError from "../errors/api-error.js";
+import APIError from "../errors/api-error.mjs";
 
 /**
  * Error handler. Send stacktrace only during development

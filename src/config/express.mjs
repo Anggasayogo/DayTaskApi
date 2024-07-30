@@ -3,8 +3,8 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import bodyParser from "body-parser";
-import { converter, notFound, handler } from "../api/middleware/error.js"
-import routes from "../routes/v1/index.js"
+import { converter, notFound, handler } from "../api/middleware/error.mjs"
+import routes from "../routes/v1/index.mjs"
 
 
 // Init express

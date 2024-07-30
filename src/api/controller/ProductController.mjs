@@ -1,5 +1,5 @@
 // Import model Product
-import Product from "../models/Product.model.js";
+import Product from "../models/Product.model.mjs";
  
 // Get semua product
 export const getProducts = async (req, res) => {

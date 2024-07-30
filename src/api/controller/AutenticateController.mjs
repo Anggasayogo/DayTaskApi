@@ -1,4 +1,4 @@
-import Users from "../models/Users.model.js";
+import Users from "../models/Users.model.mjs";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import moment from "moment-timezone";
