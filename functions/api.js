@@ -24,6 +24,7 @@ const db = new sqlize.Sequelize(envStation?.DB_NAME, envStation?.DB_USERNAME, en
 
 try {
     db.authenticate();
+    console.log('Connection has been established successfully.');
 } catch (error) {
     console.log("error",error)
 }
