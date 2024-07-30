@@ -23,7 +23,7 @@ const db = new sqlize.Sequelize(envStation?.DB_NAME, envStation?.DB_USERNAME, en
 });
 
 try {
-    await db.authenticate();
+    db.authenticate();
 } catch (error) {
     console.log("error",error)
 }
