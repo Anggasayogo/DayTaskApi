@@ -1,8 +1,8 @@
 // Import model Product
 import { QueryTypes } from "sequelize";
-import db from "../../config/database.js";
-import Task from "../models/Task.model.js";
-import { getTaskByTaskId, getTaskByUserId } from "../rawQuery/rawQuery.js";
+import db from "../../config/database.mjs";
+import Task from "../models/Task.model.mjs";
+import { getTaskByTaskId, getTaskByUserId } from "../rawQuery/rawQuery.mjs";
 
 // Get semua product
 export const getTaskList = async (req, res) => {

@@ -1,6 +1,6 @@
 import {Router} from "express";
-import { login, register, getUsersList, test } from "../../api/controller/AutenticateController.js";
-import verifyToken from "../../api/middleware/authMiddleware.js";
+import { login, register, getUsersList, test } from "../../api/controller/AutenticateController.mjs";
+import verifyToken from "../../api/middleware/authMiddleware.mjs";
 const router = Router();
 
 router.post('/register', register)

@@ -1,6 +1,6 @@
 import { QueryTypes } from "sequelize";
-import db from "../../config/database.js";
-import { getRankListQuery } from "../rawQuery/rawQuery.js";
+import db from "../../config/database.mjs";
+import { getRankListQuery } from "../rawQuery/rawQuery.mjs";
 
 export const getRankList = async (req,res) => {
     try {

@@ -1,7 +1,7 @@
 // import sequelize 
 import { Sequelize } from "sequelize";
 // import connection 
-import db from "../../config/database.js";
+import db from "../../config/database.mjs";
  
 // init DataTypes
 const { DataTypes } = Sequelize;

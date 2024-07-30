@@ -1,6 +1,6 @@
 import serverless from 'serverless-http';
-import db from "../src/config/database.js";
-import app from "../src/config/express.js";
+import db from "../src/config/database.mjs";
+import app from "../src/config/express.mjs";
 
 // Testing database connection 
 try {

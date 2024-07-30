@@ -1,6 +1,6 @@
 // import sequelize
 import sqlize from "sequelize";
-import { envStation } from "./envoirmentStation.js";
+import { envStation } from "./envoirmentStation.mjs";
 
 // create connection
 const db = new sqlize.Sequelize(envStation?.DB_NAME, envStation?.DB_USERNAME, envStation?.DB_PASSWORD, {

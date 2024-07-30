@@ -4,7 +4,7 @@ import Task from "./task.route.js"
 import Point from "./point.route.js"
 import Products from "./products.route.js"
 import Authenticate from "./authenticate.route.js"
-import verifyToken from "../../api/middleware/authMiddleware.js"
+import verifyToken from "../../api/middleware/authMiddleware.mjs"
 // Init express router
 const router = Router();
  
