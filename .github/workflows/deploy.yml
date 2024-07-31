@@ -28,8 +28,18 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd DayTaskApi
-            git pull
-            git merge origin/master
+            cd /var/www/daytask.top/tasklist
+
+            # Update code
+            git pull origin master
             npm install
-            pm2 reload daytask
+
+            # Build Docker image
+            docker build -t tasklist .
+
+            # Stop and remove existing container if it exists
+            docker ps -q -f name=tasklist | xargs -r docker stop
+            docker ps -a -q -f name=tasklist | xargs -r docker rm
+
+            # Run new container
+            docker run --name tasklist --restart always -p 5001:5001 -d tasklist
