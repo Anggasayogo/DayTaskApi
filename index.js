@@ -11,4 +11,4 @@ try {
 }
  
 // listen on port
-app.listen(envStation?.APP_PORT, () => console.log('Server running at http://localhost:5001'));
+app.listen(envStation?.APP_PORT, '0.0.0.0', () => console.log('Server running at http://localhost:5001'));
