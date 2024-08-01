@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instal dependensi aplikasi di mode produksi
-RUN npm install --production
+RUN npm install --omit=dev
 
 # Instal PM2 secara global
 RUN npm install -g pm2
