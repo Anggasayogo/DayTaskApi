@@ -4,6 +4,8 @@ services:
     image: tasklist
     ports:
       - "5001:5001"
+    networks:
+      - app-network
     restart: always
     resources:
       limits:
