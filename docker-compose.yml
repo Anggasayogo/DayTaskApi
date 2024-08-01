@@ -1,14 +1,12 @@
-version: '3'
+version: "3.9"
 services:
-  web:
-    image: tasklist
+  app:
+    container_name: tasklist
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tasklist:latest
+    restart: always
+    init: true
     ports:
       - "5001:5001"
-    networks:
-      - app-network
-    restart: always
-    resources:
-      limits:
-        memory: 512M
-      reservations:
-        memory: 256M

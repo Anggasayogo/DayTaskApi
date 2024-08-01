@@ -22,6 +22,9 @@ WORKDIR /app
 # Salin dari stage build
 COPY --from=build /app /app
 
+# Set the timezone to Asia/Jakarta (ganti dengan zona waktu yang diinginkan)
+ENV TZ=Asia/Jakarta
+
 # Expose port 5001
 EXPOSE 5001
 
