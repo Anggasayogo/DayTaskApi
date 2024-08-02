@@ -34,9 +34,9 @@ jobs:
             git pull origin master
             npm install
 
-            # Build Docker image
-            docker compose up -d --build
-
             # Stop and remove existing container if it exists
             docker ps -q -f name=tasklist | xargs -r docker stop
             docker ps -a -q -f name=tasklist | xargs -r docker rm
+
+            # Build Docker image
+            docker compose up -d --build
