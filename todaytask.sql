@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 21 Jun 2024 pada 19.46
+-- Waktu pembuatan: 29 Agu 2024 pada 13.24
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.0.28
 
@@ -62,6 +62,28 @@ CREATE TABLE `point` (
 INSERT INTO `point` (`id_point`, `point`, `created_at`, `updated_at`) VALUES
 (1, 10, '2024-03-12 07:34:32', '2024-03-12 07:34:32'),
 (2, 20, '2024-03-12 07:34:32', '2024-03-12 07:34:32');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `priority`
+--
+
+CREATE TABLE `priority` (
+  `id_priority` int(11) NOT NULL,
+  `prtiority_name` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `priority`
+--
+
+INSERT INTO `priority` (`id_priority`, `prtiority_name`, `created_at`, `updated_at`) VALUES
+(1, 'HIGH', '2024-08-29 10:47:30', '0000-00-00 00:00:00'),
+(2, 'LOW', '2024-08-29 10:47:30', '0000-00-00 00:00:00'),
+(3, 'MEDIUM', '2024-08-29 10:47:49', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -142,6 +164,7 @@ CREATE TABLE `task` (
   `task_docs` text NOT NULL,
   `id_pic` int(11) NOT NULL,
   `id_svp` int(11) NOT NULL,
+  `priority_id` int(11) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -150,12 +173,14 @@ CREATE TABLE `task` (
 -- Dumping data untuk tabel `task`
 --
 
-INSERT INTO `task` (`id`, `id_point`, `task_name`, `task_progres`, `task_date`, `task_duedate`, `task_docs`, `id_pic`, `id_svp`, `createdAt`, `updatedAt`) VALUES
-(3, 1, 'Buat Web MF yang keren banget pokonya', 'asign', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 5, 7, '2024-03-19 03:09:10', '2024-03-20 09:27:11'),
-(4, 1, 'Buat BAST meatforce', 'inprogres', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 1, 7, '2024-03-19 03:12:50', '2024-03-19 03:12:50'),
-(5, 1, 'Buat BAST meatforce', 'asign', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 1, 7, '2024-03-19 03:13:06', '2024-03-19 03:13:06'),
-(6, 1, 'Buat Web MF yang keren', 'asign', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 5, 7, '2024-03-19 04:31:18', '2024-03-19 04:31:18'),
-(7, 1, 'Buat Web MF yang keren', 'asign', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 5, 7, '2024-03-20 09:10:11', '2024-03-20 09:10:11');
+INSERT INTO `task` (`id`, `id_point`, `task_name`, `task_progres`, `task_date`, `task_duedate`, `task_docs`, `id_pic`, `id_svp`, `priority_id`, `createdAt`, `updatedAt`) VALUES
+(8, 2, 'Buat Web MF yang keren', 'success', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 1, 7, 2, '2024-06-25 10:16:01', '2024-06-25 10:16:01'),
+(9, 1, 'Buat Web MF yang keren', 'asign', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 6, 7, 1, '2024-06-25 10:19:27', '2024-06-25 10:19:27'),
+(10, 2, 'Buat Web MF yang keren', 'asign', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 6, 7, 3, '2024-06-25 10:20:58', '2024-06-25 10:20:58'),
+(11, 2, 'Buat Web MF yang keren 2', 'asign', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 6, 7, 1, '2024-06-25 10:21:05', '2024-06-25 10:21:05'),
+(12, 2, 'Buat Web MF yang keren 2', 'success', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 9, 7, 2, '2024-06-25 10:21:16', '2024-06-25 10:21:16'),
+(13, 1, 'Buat Web MF yang keren 2', 'success', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 1, 7, 1, '2024-06-25 10:21:21', '2024-06-25 10:21:21'),
+(14, 2, 'Buat Web MF yang keren 2', 'asign', '2024-07-09 01:30:00', '2024-10-09 10:30:00', 'docs.pdf', 5, 7, 1, '2024-08-29 11:14:20', '2024-08-29 11:14:20');
 
 -- --------------------------------------------------------
 
@@ -182,9 +207,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `role_id`, `divisi_id`, `phone`, `avatar`, `createdAt`, `updatedAt`) VALUES
 (1, 'Angga Maulana', 'angga@gmail.com', '$2b$10$HXIQeu5znV9slOUPytr3F.BumXkx1GMEatRTpU0Lj5sADqLzBCFTy', 2, 1, '089525551789', '-', '2024-02-26 09:13:30', '2024-02-26 09:13:30'),
-(5, 'Ari Darmawan', 'ari@gmail.com', '$2b$10$/G7Y7SKOG8nXEHGUrWaJKegKHRdRX9j0fihBRXHmIKwmYOfpfwmVu', 2, 1, '0895255516171', '-', '2024-03-12 07:46:19', '2024-03-12 07:46:19'),
 (6, 'Lishera Irena', 'iren@gmail.com', '$2b$10$pQZFKoyS/PXX9VjciACxbe/arsvWBzin35bMrFzf.bml7vcmHpi5W', 2, 1, '0895255516171', '-', '2024-03-12 07:51:50', '2024-03-12 07:51:50'),
-(7, 'Azky Muhtarom', 'azky@gmail.com', '$2b$10$OlDVASgzfBUazc0h7eDujOZIaDKo8X5z/EUe13ElihdtqfAlx/ze6', 1, 1, '0895255516171', '-', '2024-03-12 07:52:40', '2024-03-12 07:52:40');
+(7, 'Azky Muhtarom', 'azky@gmail.com', '$2b$10$OlDVASgzfBUazc0h7eDujOZIaDKo8X5z/EUe13ElihdtqfAlx/ze6', 1, 1, '0895255516171', '-', '2024-03-12 07:52:40', '2024-03-12 07:52:40'),
+(9, 'Ari Darmawan', 'ari@gmail.com', '$2b$10$QSUO9A46b9eTdc6hlZ2l6ubAtknXs3OnqTywdLyyf5xC86RuqED3u', 2, 1, '0895255516171', '-', '2024-06-24 04:53:29', '2024-06-24 04:53:29');
 
 --
 -- Indexes for dumped tables
@@ -201,6 +226,12 @@ ALTER TABLE `divisi`
 --
 ALTER TABLE `point`
   ADD PRIMARY KEY (`id_point`);
+
+--
+-- Indeks untuk tabel `priority`
+--
+ALTER TABLE `priority`
+  ADD PRIMARY KEY (`id_priority`);
 
 --
 -- Indeks untuk tabel `products`
@@ -249,6 +280,12 @@ ALTER TABLE `point`
   MODIFY `id_point` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT untuk tabel `priority`
+--
+ALTER TABLE `priority`
+  MODIFY `id_priority` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
@@ -270,13 +307,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT untuk tabel `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
