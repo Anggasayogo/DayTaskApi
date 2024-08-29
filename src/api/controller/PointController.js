@@ -10,7 +10,6 @@ export const getRankList = async (req,res) => {
             data: findRankList
         });
     } catch (error) {
-        console.log("========= 500",error.message)
         res.status(500).json({
             status: "failed",
         });

@@ -38,6 +38,10 @@ const Task = db.define('task', {
   id_svp: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  priority_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
    // Freeze Table Name

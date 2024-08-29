@@ -77,6 +77,7 @@ export const createNassignTask = async (req, res) => {
       task_docs,
       id_pic,
       id_svp,
+      id_priority
     } = req.body;
 
     if (
@@ -87,7 +88,8 @@ export const createNassignTask = async (req, res) => {
       task_duedate,
       task_docs,
       id_pic,
-      id_svp)
+      id_svp,
+      id_priority)
     ) {
       //  create and assign task
       const newTaskData = {
@@ -99,6 +101,7 @@ export const createNassignTask = async (req, res) => {
         task_docs: task_docs,
         id_pic: id_pic,
         id_svp: id_svp,
+        priority_id: id_priority,
       };
 
       const task = new Task(newTaskData);
