@@ -1,21 +1,22 @@
-// import sequelize 
-import { Sequelize } from "sequelize";
-// import connection 
-import db from "../../config/database.js";
- 
-// init DataTypes
+import { Sequelize } from 'sequelize';
+import db from '../../config/database.js';
+
 const { DataTypes } = Sequelize;
- 
-// Define schema
+
 const Priority = db.define('priority', {
-  // Define attributes
-  priority: {
-    priority_name: DataTypes.STRING
+  id_priority: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
   },
-},{
-  // Freeze Table Name
-  freezeTableName: true
+  priority_name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
+}, {
+  freezeTableName: true, // Keeps table name as 'priority'
+  timestamps: true,     // Adds 'createdAt' and 'updatedAt' fields
+  underscored: true     // Optional: use snake_case for column names
 });
- 
-// Export model Point
+
 export default Priority;

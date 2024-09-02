@@ -3,6 +3,7 @@ import { Router } from "express";
 import Task from "./task.route.js"
 import Point from "./point.route.js"
 import Products from "./products.route.js"
+import Priority from "./priority.route.js"
 import Authenticate from "./authenticate.route.js"
 import verifyToken from "../../api/middleware/authMiddleware.js"
 // Init express router
@@ -13,6 +14,7 @@ router.use('/auth', Authenticate);
 router.use('/products', verifyToken, Products);
 router.use('/task', verifyToken, Task);
 router.use('/point', verifyToken, Point);
+router.use('/priority', verifyToken, Priority)
  
 // export router
 export default router;

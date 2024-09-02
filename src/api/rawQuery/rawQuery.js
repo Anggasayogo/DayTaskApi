@@ -10,7 +10,7 @@ export const getTaskByUserId = (id) => {
       users.username, 
       users.email, 
       point.point,
-      priority.prtiority_name as priority
+      priority.priority_name as priority
     FROM task
     INNER JOIN users ON task.id_pic = users.id
     INNER JOIN point ON task.id_point = point.id_point
@@ -26,7 +26,7 @@ export const getTaskByTaskId = (id) => {
     "task.task_progres, task.task_date," +
     "task.task_duedate, task.task_docs," +
     "users.username, users.email, point.point, " +
-    "priority.prtiority_name as priority " +
+    "priority.priority_name as priority " +
     "FROM `task` INNER JOIN users ON task.id_pic = users.id " +
     "INNER JOIN point ON task.id_point = point.id_point " +
     "INNER JOIN priority ON task.priority_id = priority.id_priority " +
