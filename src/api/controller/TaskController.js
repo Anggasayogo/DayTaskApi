@@ -21,7 +21,8 @@ export const getTaskList = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
   try {
-    const product = await db.query(getTaskByTaskId(req.params.id), {
+    const taskId = req.params.id;
+    const product = await db.query(getTaskByTaskId(taskId), {
       type: QueryTypes.SELECT,
     });
 

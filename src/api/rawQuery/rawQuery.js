@@ -25,9 +25,11 @@ export const getTaskByTaskId = (id) => {
     "SELECT task.id, task.task_name," +
     "task.task_progres, task.task_date," +
     "task.task_duedate, task.task_docs," +
-    "users.username, users.email, point.point " +
+    "users.username, users.email, point.point, " +
+    "priority.prtiority_name as priority " +
     "FROM `task` INNER JOIN users ON task.id_pic = users.id " +
     "INNER JOIN point ON task.id_point = point.id_point " +
+    "INNER JOIN priority ON task.priority_id = priority.id_priority " +
     "WHERE task.id = " +
     id
   );
