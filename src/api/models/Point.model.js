@@ -1,21 +1,22 @@
-// import sequelize 
-import { Sequelize } from "sequelize";
-// import connection 
-import db from "../../config/database.js";
- 
-// init DataTypes
+import { Sequelize } from 'sequelize';
+import db from '../../config/database.js';
+
 const { DataTypes } = Sequelize;
- 
-// Define schema
+
 const Point = db.define('point', {
-  // Define attributes
-  point: {
-    type: DataTypes.INTEGER
+  id_point: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true, // Optional: if you want the column to auto-increment
   },
-},{
-  // Freeze Table Name
-  freezeTableName: true
+  point: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  }
+}, {
+  freezeTableName: true, // Use the table name as-is
+  timestamps: true, // Optional: add `createdAt` and `updatedAt` fields
+  underscored: true, // Optional: use snake_case for column names
 });
- 
-// Export model Point
+
 export default Point;
