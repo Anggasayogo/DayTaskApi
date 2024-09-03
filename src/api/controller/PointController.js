@@ -24,12 +24,14 @@ export const getPointList = async (req,res) => {
     try {
         const findAllPoint = await Point.findAll();
         res.status(200).json({
-            status: "success",
+            status: true,
+            message: "Success get point list",
             data: findAllPoint
         });
     } catch (error) {
         res.status(500).json({
-            status: "failed",
+            status: false,
+            message: "failed",
         });
     }
 }
