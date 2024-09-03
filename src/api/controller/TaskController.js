@@ -9,12 +9,14 @@ export const getTaskList = async (req, res) => {
   try {
     const taskList = await Task.findAll();
     res.status(200).json({
-      status: "successfuly",
+      status: true,
+      message: "successfuly",
       data: taskList,
     });
   } catch (err) {
     res.status(500).json({
-      error: "Failed Load task",
+      status: false,
+      message: "Failed Load task",
     });
   }
 };
@@ -28,18 +30,21 @@ export const getTaskById = async (req, res) => {
 
     if (product?.length > 0) {
       res.status(200).json({
-        error: "Task id not found",
+        status: true,
+        message: "Success Get Detail Task",
         data: product[0],
       });
     } else {
       res.status(404).json({
-        error: "Task id not found",
+        status: false,
+        message: "Task id not found",
         data: null,
       });
     }
   } catch (err) {
     res.status(500).json({
-      error: "Failed Load task by id",
+      status: false,
+      message: "Failed Load task by id",
     });
   }
 };
@@ -51,18 +56,21 @@ export const getTaskListByUserId = async (req, res) => {
     });
     if (product?.length > 0) {
       res.status(200).json({
-        status: "success",
+        status: true,
+        message: "success",
         data: product,
       });
     } else {
       res.status(404).json({
-        status: "user id not be found",
+        status: false,
+        message: "user id not be found",
         data: [],
       });
     }
   } catch (err) {
     res.status(500).json({
-      error: "Failed Load task by user id",
+      status: false,
+      message: "Failed Load task by user id",
     });
   }
 };
@@ -109,15 +117,21 @@ export const createNassignTask = async (req, res) => {
       await task.save();
       res
         .status(201)
-        .json({ message: "Task created successfully", data: newTaskData });
+        .json({ 
+          status: true,
+          message: "Task created successfully", 
+          data: newTaskData 
+        });
     } else {
       res.status(400).json({
-        error: "fields is required",
+        status: false,
+        message: "fields is required",
       });
     }
   } catch (error) {
     res.status(500).json({
-      error: "Error when creating task",
+      status: false,
+      message: "Error when creating task",
     });
   }
 };
@@ -132,16 +146,19 @@ export const destroyTask = async (req,res) => {
     })
     if(taskDestroyed === 1){
       res.status(200).json({
-        status: "Success destroying task",
+        status: true,
+        message: "Success destroying task",
       });
     }else{
       res.status(400).json({
-        status: "failed destroying task",
+        status: false,
+        message: "failed destroying task",
       });
     }
   } catch (error) {
     res.status(500).json({
-      error: "Error when deleting task",
+      status: false,
+      message: "Error when deleting task",
     });
   }
 }
@@ -182,15 +199,21 @@ export const updateTask = async (req,res) => {
     if(taskUpdated?.[0] === 1){
       res
         .status(201)
-        .json({ message: "Task updated successfully", data: newTaskData });
+        .json({ 
+          status: true,
+          message: "Task updated successfully", 
+          data: newTaskData 
+        });
     }else{
       res.status(400).json({
-        status: "failed updating task",
+        status: false,
+        message: "failed updating task",
       });
     }
   } catch (error) {
     res.status(500).json({
-      error: "Error when updating task",
+      status: false,
+      message: "Error when updating task",
     });
   }
 }

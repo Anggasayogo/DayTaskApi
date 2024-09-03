@@ -4,12 +4,14 @@ export const getPrioList = async (req,res) => {
     try {
         const findAllPrio = await Priority.findAll();
         res.status(200).json({
-            status: "success",
+            status: true,
+            message: "success",
             data: findAllPrio
         });
     } catch (error) {
         res.status(500).json({
-            status: "failed",
+            status: false,
+            message: "failed",
             data: []
         });
     }

@@ -7,12 +7,14 @@ export const getRankList = async (req,res) => {
     try {
         const findRankList = await db.query(getRankListQuery(),{ type: QueryTypes.SELECT })
         res.status(200).json({
-            status: "success",
+            status: true,
+            message: "Success get Rank List",
             data: findRankList
         });
     } catch (error) {
         res.status(500).json({
-            status: "failed",
+            status: false,
+            message: "Failed get Rank List"
         });
     }
 }

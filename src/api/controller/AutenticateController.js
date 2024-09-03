@@ -26,10 +26,16 @@ export const register = async (req, res) => {
         avatar,
       });
       await user.save();
-      res.status(201).json({ message: "User registered successfully" });
+      res.status(201).json({
+        status: true,
+        message: "User registered successfully" 
+      });
     }
   } catch (error) {
-    res.status(500).json({ error: "Registration failed" });
+    res.status(500).json({ 
+      status: false,
+      message: "Registration failed" 
+    });
   }
 };
 
@@ -47,7 +53,10 @@ export const login = async (req, res) => {
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ error: "Authentication failed" });
+      return res.status(401).json({ 
+        status: false,
+        message: "Authentication failed" 
+      });
     }
 
     const token = jwt.sign({ userId: user.id }, "RRQ", {
@@ -55,6 +64,8 @@ export const login = async (req, res) => {
     });
 
     res.status(200).json({
+      status: true,
+      message: "Login successFully",
       user: {
         user_id: user.id,
         username: user.username,
@@ -66,7 +77,8 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      error: "Login failed",
+      status: false,
+      message: "Login failed" ,
     });
   }
 };
@@ -85,7 +97,8 @@ export const getUsersList = async (req, res) => {
     res.send(user);
   } catch (error) {
     res.status(500).json({
-      error: "Failed get user list",
+      status: false,
+      message: "Failed get user list",
     });
   }
 };
