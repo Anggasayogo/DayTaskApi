@@ -15,25 +15,29 @@ jobs:
         with:
           node-version: 20.x
 
-      - name: Run install
+      - name: Install dependencies
         run: npm install
 
-      - name: Deploy using ssh
+      - name: Deploy using SSH
         uses: appleboy/ssh-action@master
         env:
           YOUR_SECRET: ${{ secrets.YOUR_SECRET }}
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
+          host: ${{ secrets.HOST }} # ganti dengan IP atau hostname
+          username: ${{ secrets.USERNAME }} # ganti dengan username
+          password: ${{ secrets.PASSWORD }} # ganti dengan password
+          port: 45022 # port yang Anda inginkan
           script: |
+            # Mulai SSH agent
             eval $(ssh-agent -s)
+            # Tambahkan private key
             ssh-add /home/daytaskt/.ssh/id_ed25519
 
-            # Update code
+            # Update kode
             git pull origin master
+
+            # Install dependencies
             npm install
 
-            # Build app
+            # Build aplikasi
             npx babel src --out-dir . --ignore node_modules
