@@ -28,6 +28,7 @@ jobs:
           passphrase: ${{ secrets.SSH_KEY_PHASSES }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
           script: |
             whoami
             # Mulai SSH agent
