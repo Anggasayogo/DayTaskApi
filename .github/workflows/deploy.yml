@@ -25,8 +25,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}  # Your server's public IP
           username: ${{ secrets.USERNAME }}  # SSH username
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          password: ${{ secrets.PASSWORD }}  # SSH password for the user
+          key: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}  # The SSH port (45022)
           script: |
             whoami
