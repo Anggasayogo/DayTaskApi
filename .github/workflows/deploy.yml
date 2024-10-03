@@ -27,6 +27,7 @@ jobs:
           username: ${{ secrets.USERNAME }} # ganti dengan username
           password: ${{ secrets.PASSWORD }} # ganti dengan password
           port: 45022 # port yang Anda inginkan
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # Mulai SSH agent
             eval $(ssh-agent -s)
