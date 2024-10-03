@@ -1,6 +1,6 @@
 import Users from "../models/Users.model.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import argon2 from "argon2";
 import moment from "moment-timezone";
 
 export const register = async (req, res) => {
@@ -15,7 +15,7 @@ export const register = async (req, res) => {
     if (userExist) {
       return res.status(400).json({ error: "Account Alredy Exist" });
     } else {
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await argon2.hash(password);
       const user = new Users({
         username,
         email,
@@ -51,7 +51,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "User doesn't exist" });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await argon2.verify(user.password, password);
     if (!passwordMatch) {
       return res.status(401).json({ 
         status: false,
@@ -76,6 +76,7 @@ export const login = async (req, res) => {
       token,
     });
   } catch (error) {
+    console.log(error.message)
     res.status(500).json({
       status: false,
       message: "Login failed" ,

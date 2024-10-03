@@ -1,0 +1,24 @@
+{
+    "rules": {
+        "convert-esm-to-commonjs": "off",
+        "loader": "off",
+        "gitignore": "off",
+        "putout-config/apply-nodejs": "off",
+        "remove-unused-variables": "off",
+        "remove-console": "off",
+        "promises/remove-useless-async": "off",
+        "github/update-actions": "off",
+        "github/set-node-versions": "off",
+        "github/install-bun": "off",
+        "github/convert-npm-to-bun": "off",
+        "group-imports-by-source": "off",
+        "conditions/apply-consistent-blocks": "off",
+        "conditions/remove-useless-else": "off",
+        "extract-sequence-expressions": "off",
+        "conditions/evaluate": "off",
+        "conditions/convert-comparison-to-boolean": "off",
+        "remove-useless-constructor": "off",
+        "remove-useless-return": "off",
+        "sort-imports-by-specifiers": "off"
+    }
+}

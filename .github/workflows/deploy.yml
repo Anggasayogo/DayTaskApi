@@ -28,15 +28,12 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /var/www/daytask.top/tasklist
+            eval $(ssh-agent -s)
+            ssh-add /home/daytaskt/.ssh/id_ed25519
 
             # Update code
             git pull origin master
             npm install
 
-            # Stop and remove existing container if it exists
-            docker ps -q -f name=tasklist | xargs -r docker stop
-            docker ps -a -q -f name=tasklist | xargs -r docker rm
-
-            # Build Docker image
-            docker compose up -d --build
+            # Build app
+            npx babel src --out-dir . --ignore node_modules
