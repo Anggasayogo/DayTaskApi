@@ -24,11 +24,11 @@ jobs:
           YOUR_SECRET: ${{ secrets.YOUR_SECRET }}
         with:
           host: ${{ secrets.HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SSH_KEY_PHASSES }}
+          port: ${{ secrets.PORT }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PHASSES }}
           script: |
             whoami
             # Mulai SSH agent
