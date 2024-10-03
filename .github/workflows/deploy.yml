@@ -27,8 +27,6 @@ jobs:
           username: ${{ secrets.USERNAME }}  # SSH username
           password: ${{ secrets.PASSWORD }}  # SSH password for the user
           port: ${{ secrets.PORT }}  # The SSH port (45022)
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your private key
-          passphrase: ${{ secrets.SSH_KEY_PHASSES }}  # Optional, if your key is encrypted
           script: |
             whoami
             # Mulai SSH agent
