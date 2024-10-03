@@ -23,12 +23,12 @@ jobs:
         env:
           YOUR_SECRET: ${{ secrets.YOUR_SECRET }}
         with:
-          host: ${{ secrets.HOST }} # ganti dengan IP atau hostname
-          username: ${{ secrets.USERNAME }} # ganti dengan username
-          password: ${{ secrets.PASSWORD }} # ganti dengan password
-          port: 45022 # port yang Anda inginkan
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSWORD }}
           script: |
+            whoami
             # Mulai SSH agent
             eval $(ssh-agent -s)
             # Tambahkan private key
