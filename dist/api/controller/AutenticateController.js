@@ -4,7 +4,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.test = exports.register = exports.login = exports.getUsersList = void 0;
+exports.updateProfile = exports.test = exports.register = exports.login = exports.getUsersList = void 0;
 var _UsersModel = _interopRequireDefault(require("../models/Users.model.js"));
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _argon = _interopRequireDefault(require("argon2"));
@@ -127,6 +127,7 @@ var login = exports.login = /*#__PURE__*/function () {
               username: user.username,
               email: user.email,
               phone: user.phone,
+              role_id: user.role_id,
               avatar: user.avatar
             },
             token: token
@@ -184,11 +185,104 @@ var getUsersList = exports.getUsersList = /*#__PURE__*/function () {
     return _ref3.apply(this, arguments);
   };
 }();
-var test = exports.test = /*#__PURE__*/function () {
+var updateProfile = exports.updateProfile = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
-    var timezone, timeFormat, currentTime;
+    var id, _req$body3, username, email, phone, avatar, role_id, divisi_id, user, emailExist;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
+          id = req.params.id; // ID pengguna dari parameter URL
+          _req$body3 = req.body, username = _req$body3.username, email = _req$body3.email, phone = _req$body3.phone, avatar = _req$body3.avatar, role_id = _req$body3.role_id, divisi_id = _req$body3.divisi_id; // Data yang diperbarui
+          // Cek apakah pengguna ada
+          _context4.next = 5;
+          return _UsersModel["default"].findOne({
+            where: {
+              id: id
+            }
+          });
+        case 5:
+          user = _context4.sent;
+          if (user) {
+            _context4.next = 8;
+            break;
+          }
+          return _context4.abrupt("return", res.status(404).json({
+            status: false,
+            message: "User not found"
+          }));
+        case 8:
+          if (!(email && email !== user.email)) {
+            _context4.next = 14;
+            break;
+          }
+          _context4.next = 11;
+          return _UsersModel["default"].findOne({
+            where: {
+              email: email
+            }
+          });
+        case 11:
+          emailExist = _context4.sent;
+          if (!emailExist) {
+            _context4.next = 14;
+            break;
+          }
+          return _context4.abrupt("return", res.status(400).json({
+            status: false,
+            message: "Email is already in use by another account"
+          }));
+        case 14:
+          // Update data pengguna
+          user.username = username || user.username;
+          user.email = email || user.email;
+          user.phone = phone || user.phone;
+          user.avatar = avatar || user.avatar;
+          user.role_id = role_id || user.role_id;
+          user.divisi_id = divisi_id || user.divisi_id;
+
+          // Simpan perubahan ke database
+          _context4.next = 22;
+          return user.save();
+        case 22:
+          res.status(200).json({
+            status: true,
+            message: "Profile updated successfully",
+            data: {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+              phone: user.phone,
+              avatar: user.avatar,
+              role_id: user.role_id,
+              divisi_id: user.divisi_id
+            }
+          });
+          _context4.next = 29;
+          break;
+        case 25:
+          _context4.prev = 25;
+          _context4.t0 = _context4["catch"](0);
+          console.error("Error updating profile:", _context4.t0);
+          res.status(500).json({
+            status: false,
+            message: "Failed to update profile"
+          });
+        case 29:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4, null, [[0, 25]]);
+  }));
+  return function updateProfile(_x7, _x8) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+var test = exports.test = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
+    var timezone, timeFormat, currentTime;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
         case 0:
           try {
             timezone = [{
@@ -214,11 +308,11 @@ var test = exports.test = /*#__PURE__*/function () {
           }
         case 1:
         case "end":
-          return _context4.stop();
+          return _context5.stop();
       }
-    }, _callee4);
+    }, _callee5);
   }));
-  return function test(_x7, _x8) {
-    return _ref4.apply(this, arguments);
+  return function test(_x9, _x10) {
+    return _ref5.apply(this, arguments);
   };
 }();

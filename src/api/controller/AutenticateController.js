@@ -47,6 +47,7 @@ export const login = async (req, res) => {
         email: email,
       },
     });
+
     if (!user) {
       return res.status(401).json({ error: "User doesn't exist" });
     }
@@ -71,6 +72,7 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         phone: user.phone,
+        role_id: user.role_id,
         avatar: user.avatar,
       },
       token,
@@ -103,6 +105,70 @@ export const getUsersList = async (req, res) => {
     });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { id } = req.params; // ID pengguna dari parameter URL
+    const { username, email, phone, avatar, role_id, divisi_id } = req.body; // Data yang diperbarui
+
+    // Cek apakah pengguna ada
+    const user = await Users.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      return res.status(404).json({ 
+        status: false, 
+        message: "User not found" 
+      });
+    }
+
+    // Periksa jika email yang ingin diperbarui sudah digunakan oleh pengguna lain
+    if (email && email !== user.email) {
+      const emailExist = await Users.findOne({
+        where: { email },
+      });
+      if (emailExist) {
+        return res.status(400).json({
+          status: false,
+          message: "Email is already in use by another account",
+        });
+      }
+    }
+
+    // Update data pengguna
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
+    user.avatar = avatar || user.avatar;
+    user.role_id = role_id || user.role_id;
+    user.divisi_id = divisi_id || user.divisi_id;
+
+    // Simpan perubahan ke database
+    await user.save();
+
+    res.status(200).json({
+      status: true,
+      message: "Profile updated successfully",
+      data: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        phone: user.phone,
+        avatar: user.avatar,
+        role_id: user.role_id,
+        divisi_id: user.divisi_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ 
+      status: false, 
+      message: "Failed to update profile" 
+    });
+  }
+};
+
 
 export const test = async (req, res) => {
   try {
