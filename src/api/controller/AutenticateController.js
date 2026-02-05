@@ -5,36 +5,58 @@ import moment from "moment-timezone";
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password, role_id, divisi_id, phone, avatar } =
-      req.body;
-    const userExist = await Users.findOne({
-      where: {
-        email: email,
-      },
-    });
+    const { username, email, password, role_id, divisi_id, phone } = req.body;
+    const host = `${req.protocol}://${req.get('host')}`;
+
+    // Cek email sudah digunakan atau belum
+    const userExist = await Users.findOne({ where: { email } });
+
     if (userExist) {
-      return res.status(400).json({ error: "Account Alredy Exist" });
-    } else {
-      const hashedPassword = await argon2.hash(password);
-      const user = new Users({
-        username,
-        email,
-        password: hashedPassword,
-        role_id,
-        divisi_id,
-        phone,
-        avatar,
-      });
-      await user.save();
-      res.status(201).json({
-        status: true,
-        message: "User registered successfully" 
+      return res.status(400).json({
+        status: false,
+        message: "Email is already in use"
       });
     }
+
+    // Proses avatar dari upload (jika ada)
+    let avatarPath = "";
+    if (req.file) {
+      avatarPath = `assets/${req.file.filename}`;
+    }
+
+    // Hash password
+    const hashedPassword = await argon2.hash(password);
+
+    // Insert user baru
+    const newUser = await Users.create({
+      username,
+      email,
+      password: hashedPassword,
+      role_id,
+      divisi_id,
+      phone,
+      avatar: avatarPath
+    });
+
+    return res.status(201).json({
+      status: true,
+      message: "User registered successfully",
+      data: {
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        phone: newUser.phone,
+        role_id: newUser.role_id,
+        divisi_id: newUser.divisi_id,
+        avatar: avatarPath ? `${host}/${avatarPath}` : null
+      }
+    });
+
   } catch (error) {
-    res.status(500).json({ 
+    console.error("Registration error:", error);
+    return res.status(500).json({
       status: false,
-      message: "Registration failed" 
+      message: "Registration failed"
     });
   }
 };
@@ -109,7 +131,8 @@ export const getUsersList = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { id } = req.params; // ID pengguna dari parameter URL
-    const { username, email, phone, avatar, role_id, divisi_id } = req.body; // Data yang diperbarui
+    const { username, email, phone, role_id, divisi_id, password } = req.body; 
+    const host = `${req.protocol}://${req.get('host')}`;
 
     // Cek apakah pengguna ada
     const user = await Users.findOne({
@@ -136,13 +159,20 @@ export const updateProfile = async (req, res) => {
       }
     }
 
+    let avatarPath = '';
+    if (req.file) { 
+      avatarPath = `assets/${req.file.filename}`; 
+    }
+
+     const hashedPassword = await argon2.hash(password);
     // Update data pengguna
     user.username = username || user.username;
     user.email = email || user.email;
     user.phone = phone || user.phone;
-    user.avatar = avatar || user.avatar;
+    user.avatar = avatarPath || user.avatar;
     user.role_id = role_id || user.role_id;
     user.divisi_id = divisi_id || user.divisi_id;
+    user.password = hashedPassword || user.password;
 
     // Simpan perubahan ke database
     await user.save();
@@ -155,7 +185,7 @@ export const updateProfile = async (req, res) => {
         username: user.username,
         email: user.email,
         phone: user.phone,
-        avatar: user.avatar,
+        avatar: `${host}/${user.avatar}`,
         role_id: user.role_id,
         divisi_id: user.divisi_id,
       },

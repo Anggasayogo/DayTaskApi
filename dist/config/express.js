@@ -25,6 +25,7 @@ app.use(_bodyParser["default"].urlencoded({
 }));
 app.use((0, _helmet["default"])());
 app.use((0, _cors["default"])());
+app.use("/assets", _express["default"]["static"]("assets"));
 app.use('/api/v1', _index["default"]);
 app.get('/', /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {

@@ -15,63 +15,79 @@ function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 var register = exports.register = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
-    var _req$body, username, email, password, role_id, divisi_id, phone, avatar, userExist, hashedPassword, user;
+    var _req$body, username, email, password, role_id, divisi_id, phone, host, userExist, avatarPath, hashedPassword, newUser;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
-          _req$body = req.body, username = _req$body.username, email = _req$body.email, password = _req$body.password, role_id = _req$body.role_id, divisi_id = _req$body.divisi_id, phone = _req$body.phone, avatar = _req$body.avatar;
-          _context.next = 4;
+          _req$body = req.body, username = _req$body.username, email = _req$body.email, password = _req$body.password, role_id = _req$body.role_id, divisi_id = _req$body.divisi_id, phone = _req$body.phone;
+          host = "".concat(req.protocol, "://").concat(req.get('host')); // Cek email sudah digunakan atau belum
+          _context.next = 5;
           return _UsersModel["default"].findOne({
             where: {
               email: email
             }
           });
-        case 4:
+        case 5:
           userExist = _context.sent;
           if (!userExist) {
-            _context.next = 9;
+            _context.next = 8;
             break;
           }
           return _context.abrupt("return", res.status(400).json({
-            error: "Account Alredy Exist"
+            status: false,
+            message: "Email is already in use"
           }));
-        case 9:
-          _context.next = 11;
+        case 8:
+          // Proses avatar dari upload (jika ada)
+          avatarPath = "";
+          if (req.file) {
+            avatarPath = "assets/".concat(req.file.filename);
+          }
+
+          // Hash password
+          _context.next = 12;
           return _argon["default"].hash(password);
-        case 11:
+        case 12:
           hashedPassword = _context.sent;
-          user = new _UsersModel["default"]({
+          _context.next = 15;
+          return _UsersModel["default"].create({
             username: username,
             email: email,
             password: hashedPassword,
             role_id: role_id,
             divisi_id: divisi_id,
             phone: phone,
-            avatar: avatar
+            avatar: avatarPath
           });
-          _context.next = 15;
-          return user.save();
         case 15:
-          res.status(201).json({
+          newUser = _context.sent;
+          return _context.abrupt("return", res.status(201).json({
             status: true,
-            message: "User registered successfully"
-          });
-        case 16:
-          _context.next = 21;
-          break;
-        case 18:
-          _context.prev = 18;
+            message: "User registered successfully",
+            data: {
+              id: newUser.id,
+              username: newUser.username,
+              email: newUser.email,
+              phone: newUser.phone,
+              role_id: newUser.role_id,
+              divisi_id: newUser.divisi_id,
+              avatar: avatarPath ? "".concat(host, "/").concat(avatarPath) : null
+            }
+          }));
+        case 19:
+          _context.prev = 19;
           _context.t0 = _context["catch"](0);
-          res.status(500).json({
+          console.error("Registration error:", _context.t0);
+          return _context.abrupt("return", res.status(500).json({
             status: false,
             message: "Registration failed"
-          });
-        case 21:
+          }));
+        case 23:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 18]]);
+    }, _callee, null, [[0, 19]]);
   }));
   return function register(_x, _x2) {
     return _ref.apply(this, arguments);
@@ -187,64 +203,73 @@ var getUsersList = exports.getUsersList = /*#__PURE__*/function () {
 }();
 var updateProfile = exports.updateProfile = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
-    var id, _req$body3, username, email, phone, avatar, role_id, divisi_id, user, emailExist;
+    var id, _req$body3, username, email, phone, role_id, divisi_id, password, host, user, emailExist, avatarPath, hashedPassword;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
           _context4.prev = 0;
           id = req.params.id; // ID pengguna dari parameter URL
-          _req$body3 = req.body, username = _req$body3.username, email = _req$body3.email, phone = _req$body3.phone, avatar = _req$body3.avatar, role_id = _req$body3.role_id, divisi_id = _req$body3.divisi_id; // Data yang diperbarui
-          // Cek apakah pengguna ada
-          _context4.next = 5;
+          _req$body3 = req.body, username = _req$body3.username, email = _req$body3.email, phone = _req$body3.phone, role_id = _req$body3.role_id, divisi_id = _req$body3.divisi_id, password = _req$body3.password;
+          host = "".concat(req.protocol, "://").concat(req.get('host')); // Cek apakah pengguna ada
+          _context4.next = 6;
           return _UsersModel["default"].findOne({
             where: {
               id: id
             }
           });
-        case 5:
+        case 6:
           user = _context4.sent;
           if (user) {
-            _context4.next = 8;
+            _context4.next = 9;
             break;
           }
           return _context4.abrupt("return", res.status(404).json({
             status: false,
             message: "User not found"
           }));
-        case 8:
+        case 9:
           if (!(email && email !== user.email)) {
-            _context4.next = 14;
+            _context4.next = 15;
             break;
           }
-          _context4.next = 11;
+          _context4.next = 12;
           return _UsersModel["default"].findOne({
             where: {
               email: email
             }
           });
-        case 11:
+        case 12:
           emailExist = _context4.sent;
           if (!emailExist) {
-            _context4.next = 14;
+            _context4.next = 15;
             break;
           }
           return _context4.abrupt("return", res.status(400).json({
             status: false,
             message: "Email is already in use by another account"
           }));
-        case 14:
+        case 15:
+          avatarPath = '';
+          if (req.file) {
+            avatarPath = "assets/".concat(req.file.filename);
+          }
+          _context4.next = 19;
+          return _argon["default"].hash(password);
+        case 19:
+          hashedPassword = _context4.sent;
           // Update data pengguna
           user.username = username || user.username;
           user.email = email || user.email;
           user.phone = phone || user.phone;
-          user.avatar = avatar || user.avatar;
+          user.avatar = avatarPath || user.avatar;
           user.role_id = role_id || user.role_id;
           user.divisi_id = divisi_id || user.divisi_id;
+          user.password = hashedPassword || user.password;
 
           // Simpan perubahan ke database
-          _context4.next = 22;
+          _context4.next = 29;
           return user.save();
-        case 22:
+        case 29:
           res.status(200).json({
             status: true,
             message: "Profile updated successfully",
@@ -253,26 +278,26 @@ var updateProfile = exports.updateProfile = /*#__PURE__*/function () {
               username: user.username,
               email: user.email,
               phone: user.phone,
-              avatar: user.avatar,
+              avatar: "".concat(host, "/").concat(user.avatar),
               role_id: user.role_id,
               divisi_id: user.divisi_id
             }
           });
-          _context4.next = 29;
+          _context4.next = 36;
           break;
-        case 25:
-          _context4.prev = 25;
+        case 32:
+          _context4.prev = 32;
           _context4.t0 = _context4["catch"](0);
           console.error("Error updating profile:", _context4.t0);
           res.status(500).json({
             status: false,
             message: "Failed to update profile"
           });
-        case 29:
+        case 36:
         case "end":
           return _context4.stop();
       }
-    }, _callee4, null, [[0, 25]]);
+    }, _callee4, null, [[0, 32]]);
   }));
   return function updateProfile(_x7, _x8) {
     return _ref4.apply(this, arguments);

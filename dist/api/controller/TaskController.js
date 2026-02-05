@@ -98,14 +98,14 @@ var getTaskById = exports.getTaskById = /*#__PURE__*/function () {
 }();
 var getTaskListByUserId = exports.getTaskListByUserId = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
-    var _req$query, id, priority, task_progres, filterDate, keyword, product;
+    var _req$query, id, priority, task_progres, filterDate, keyword, type, product;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           _context3.prev = 0;
-          _req$query = req.query, id = _req$query.id, priority = _req$query.priority, task_progres = _req$query.task_progres, filterDate = _req$query.filterDate, keyword = _req$query.keyword;
+          _req$query = req.query, id = _req$query.id, priority = _req$query.priority, task_progres = _req$query.task_progres, filterDate = _req$query.filterDate, keyword = _req$query.keyword, type = _req$query.type;
           _context3.next = 4;
-          return _database["default"].query((0, _rawQuery.getTaskByUserId)(id, priority, task_progres, filterDate, keyword), {
+          return _database["default"].query((0, _rawQuery.getTaskByUserId)(id, priority, task_progres, filterDate, keyword, type), {
             type: _sequelize.QueryTypes.SELECT
           });
         case 4:
@@ -142,19 +142,87 @@ var getTaskListByUserId = exports.getTaskListByUserId = /*#__PURE__*/function ()
     return _ref3.apply(this, arguments);
   };
 }();
+
+// export const createNassignTask = async (req, res) => {
+//   try {
+//     const {
+//       id_point,
+//       task_name,
+//       task_progres,
+//       task_date,
+//       task_duedate,
+//       task_docs,
+//       feedback,
+//       id_pic,
+//       id_svp,
+//       id_priority,
+//     } = req.body;
+
+//     if (
+//       (id_point,
+//       task_name,
+//       task_progres,
+//       task_date,
+//       task_duedate,
+//       task_docs,
+//       id_pic,
+//       id_svp,
+//       id_priority)
+//     ) {
+//       //  create and assign task
+//       const newTaskData = {
+//         id_point: id_point,
+//         task_name: task_name,
+//         task_progres: task_progres,
+//         task_date: new Date(task_date),
+//         task_duedate: new Date(task_duedate),
+//         task_docs: task_docs,
+//         feedback: feedback,
+//         id_pic: id_pic,
+//         id_svp: id_svp,
+//         priority_id: id_priority,
+//       };
+
+//       const task = new Task(newTaskData);
+//       await task.save();
+//       res.status(201).json({
+//         status: true,
+//         message: "Task created successfully",
+//         data: newTaskData,
+//       });
+//     } else {
+//       res.status(400).json({
+//         status: false,
+//         message: "fields is required",
+//       });
+//     }
+//   } catch (error) {
+//     res.status(500).json({
+//       status: false,
+//       message: "Error when creating task",
+//     });
+//   }
+// };
+
 var createNassignTask = exports.createNassignTask = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
-    var _req$body, id_point, task_name, task_progres, task_date, task_duedate, task_docs, id_pic, id_svp, id_priority, newTaskData, task;
+    var _req$body, id_point, task_name, task_progres, task_date, task_duedate, task_docs, feedback, id_pic, id_svp, id_priority, taskFilePath, newTaskData, task;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
           _context4.prev = 0;
-          _req$body = req.body, id_point = _req$body.id_point, task_name = _req$body.task_name, task_progres = _req$body.task_progres, task_date = _req$body.task_date, task_duedate = _req$body.task_duedate, task_docs = _req$body.task_docs, id_pic = _req$body.id_pic, id_svp = _req$body.id_svp, id_priority = _req$body.id_priority;
-          if (!(id_point, task_name, task_progres, task_date, task_duedate, task_docs, id_pic, id_svp, id_priority)) {
-            _context4.next = 10;
+          _req$body = req.body, id_point = _req$body.id_point, task_name = _req$body.task_name, task_progres = _req$body.task_progres, task_date = _req$body.task_date, task_duedate = _req$body.task_duedate, task_docs = _req$body.task_docs, feedback = _req$body.feedback, id_pic = _req$body.id_pic, id_svp = _req$body.id_svp, id_priority = _req$body.id_priority; // Tambahkan task_docs ke dalam syarat validasi IF
+          if (!(id_point && task_name && task_progres && task_date && task_docs &&
+          // Wajib ada isinya
+          id_pic && id_svp && id_priority)) {
+            _context4.next = 12;
             break;
           }
-          //  create and assign task
+          // Logika upload untuk file fisik (OPTIONAL)
+          taskFilePath = '';
+          if (req.file) {
+            taskFilePath = "assets/task/".concat(req.file.filename);
+          }
           newTaskData = {
             id_point: id_point,
             task_name: task_name,
@@ -162,41 +230,47 @@ var createNassignTask = exports.createNassignTask = /*#__PURE__*/function () {
             task_date: new Date(task_date),
             task_duedate: new Date(task_duedate),
             task_docs: task_docs,
+            // Wajib dari req.body
+            task_file: taskFilePath,
+            // Bisa kosong jika tidak upload
+            feedback: feedback || '',
             id_pic: id_pic,
             id_svp: id_svp,
             priority_id: id_priority
           };
           task = new _TaskModel["default"](newTaskData);
-          _context4.next = 7;
+          _context4.next = 9;
           return task.save();
-        case 7:
+        case 9:
           res.status(201).json({
             status: true,
             message: "Task created successfully",
             data: newTaskData
           });
-          _context4.next = 11;
+          _context4.next = 13;
           break;
-        case 10:
+        case 12:
+          // Jika task_docs kosong, akan lari ke sini
           res.status(400).json({
             status: false,
-            message: "fields is required"
+            message: "Fields 'task_docs' and other main fields are required"
           });
-        case 11:
-          _context4.next = 16;
-          break;
         case 13:
-          _context4.prev = 13;
+          _context4.next = 19;
+          break;
+        case 15:
+          _context4.prev = 15;
           _context4.t0 = _context4["catch"](0);
+          console.error("Error creating task:", _context4.t0);
           res.status(500).json({
             status: false,
             message: "Error when creating task"
           });
-        case 16:
+        case 19:
         case "end":
           return _context4.stop();
       }
-    }, _callee4, null, [[0, 13]]);
+    }, _callee4, null, [[0, 15]]);
   }));
   return function createNassignTask(_x7, _x8) {
     return _ref4.apply(this, arguments);
@@ -249,12 +323,12 @@ var destroyTask = exports.destroyTask = /*#__PURE__*/function () {
 }();
 var updateTask = exports.updateTask = /*#__PURE__*/function () {
   var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
-    var _req$body2, id_task, id_point, task_name, task_progres, task_date, task_duedate, task_docs, id_pic, id_svp, newTaskData, taskUpdated;
+    var _req$body2, id_task, id_point, task_name, task_progres, task_date, task_duedate, task_docs, feedback, id_pic, id_svp, newTaskData, taskUpdated;
     return _regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
           _context6.prev = 0;
-          _req$body2 = req.body, id_task = _req$body2.id_task, id_point = _req$body2.id_point, task_name = _req$body2.task_name, task_progres = _req$body2.task_progres, task_date = _req$body2.task_date, task_duedate = _req$body2.task_duedate, task_docs = _req$body2.task_docs, id_pic = _req$body2.id_pic, id_svp = _req$body2.id_svp; //  create and assign task
+          _req$body2 = req.body, id_task = _req$body2.id_task, id_point = _req$body2.id_point, task_name = _req$body2.task_name, task_progres = _req$body2.task_progres, task_date = _req$body2.task_date, task_duedate = _req$body2.task_duedate, task_docs = _req$body2.task_docs, feedback = _req$body2.feedback, id_pic = _req$body2.id_pic, id_svp = _req$body2.id_svp; //  create and assign task
           newTaskData = {
             id_point: id_point,
             task_name: task_name,
@@ -262,6 +336,7 @@ var updateTask = exports.updateTask = /*#__PURE__*/function () {
             task_date: new Date(task_date),
             task_duedate: new Date(task_duedate),
             task_docs: task_docs,
+            feedback: feedback,
             id_pic: id_pic,
             id_svp: id_svp
           };
@@ -332,6 +407,7 @@ var downloadReport = exports.downloadReport = /*#__PURE__*/function () {
 
           // User Information
           user = tasks[0];
+          console.log("🔥", tasks);
           doc.fontSize(14).font("Helvetica-Bold").text("User Information", {
             underline: true
           }).moveDown(0.5).font("Helvetica").fontSize(12).text("Name: ".concat(user.username)).text("Email: ".concat(user.email)).moveDown(1.5);
@@ -379,7 +455,7 @@ var downloadReport = exports.downloadReport = /*#__PURE__*/function () {
             }).text(task.priority, 300, rowTop, {
               width: 80,
               align: "center"
-            }).text(task.task_progress, 380, rowTop, {
+            }).text(task.task_progres, 380, rowTop, {
               width: 80,
               align: "center"
             }).text(task.point, 460, rowTop, {
@@ -395,7 +471,7 @@ var downloadReport = exports.downloadReport = /*#__PURE__*/function () {
             align: "right"
           });
           doc.end();
-        case 23:
+        case 24:
         case "end":
           return _context7.stop();
       }

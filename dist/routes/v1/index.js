@@ -9,6 +9,7 @@ var _taskRoute = _interopRequireDefault(require("./task.route.js"));
 var _pointRoute = _interopRequireDefault(require("./point.route.js"));
 var _productsRoute = _interopRequireDefault(require("./products.route.js"));
 var _priorityRoute = _interopRequireDefault(require("./priority.route.js"));
+var _rewardRoute = _interopRequireDefault(require("./reward.route.js"));
 var _authenticateRoute = _interopRequireDefault(require("./authenticate.route.js"));
 var _authMiddleware = _interopRequireDefault(require("../../api/middleware/authMiddleware.js"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
@@ -23,6 +24,7 @@ router.use('/products', _authMiddleware["default"], _productsRoute["default"]);
 router.use('/task', _authMiddleware["default"], _taskRoute["default"]);
 router.use('/point', _authMiddleware["default"], _pointRoute["default"]);
 router.use('/priority', _authMiddleware["default"], _priorityRoute["default"]);
+router.use('/reward', _authMiddleware["default"], _rewardRoute["default"]);
 
 // export router
 var _default = exports["default"] = router;

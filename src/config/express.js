@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet())
 app.use(cors());
+app.use("/assets", express.static("assets"));
 app.use('/api/v1', routes);
 app.get('/', async (req, res) => {
     res.send({

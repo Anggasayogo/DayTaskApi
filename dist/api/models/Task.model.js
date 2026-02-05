@@ -38,6 +38,10 @@ var Task = _database["default"].define('task', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  feedback: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   id_pic: {
     type: DataTypes.INTEGER,
     allowNull: false

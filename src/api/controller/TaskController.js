@@ -51,10 +51,11 @@ export const getTaskById = async (req, res) => {
 
 export const getTaskListByUserId = async (req, res) => {
   try {
-    const { id, priority, task_progres, filterDate, keyword } = req.query;
-    const product = await db.query(getTaskByUserId(id, priority, task_progres, filterDate, keyword), {
+    const { id, priority, task_progres, filterDate, keyword, type } = req.query;
+    const product = await db.query(getTaskByUserId(id, priority, task_progres, filterDate, keyword, type), {
       type: QueryTypes.SELECT,
     });
+   
     if (product?.length > 0) {
       res.status(200).json({
         status: true,
@@ -76,6 +77,67 @@ export const getTaskListByUserId = async (req, res) => {
   }
 };
 
+// export const createNassignTask = async (req, res) => {
+//   try {
+//     const {
+//       id_point,
+//       task_name,
+//       task_progres,
+//       task_date,
+//       task_duedate,
+//       task_docs,
+//       feedback,
+//       id_pic,
+//       id_svp,
+//       id_priority,
+//     } = req.body;
+
+//     if (
+//       (id_point,
+//       task_name,
+//       task_progres,
+//       task_date,
+//       task_duedate,
+//       task_docs,
+//       id_pic,
+//       id_svp,
+//       id_priority)
+//     ) {
+//       //  create and assign task
+//       const newTaskData = {
+//         id_point: id_point,
+//         task_name: task_name,
+//         task_progres: task_progres,
+//         task_date: new Date(task_date),
+//         task_duedate: new Date(task_duedate),
+//         task_docs: task_docs,
+//         feedback: feedback,
+//         id_pic: id_pic,
+//         id_svp: id_svp,
+//         priority_id: id_priority,
+//       };
+
+//       const task = new Task(newTaskData);
+//       await task.save();
+//       res.status(201).json({
+//         status: true,
+//         message: "Task created successfully",
+//         data: newTaskData,
+//       });
+//     } else {
+//       res.status(400).json({
+//         status: false,
+//         message: "fields is required",
+//       });
+//     }
+//   } catch (error) {
+//     res.status(500).json({
+//       status: false,
+//       message: "Error when creating task",
+//     });
+//   }
+// };
+
 export const createNassignTask = async (req, res) => {
   try {
     const {
@@ -84,31 +146,40 @@ export const createNassignTask = async (req, res) => {
       task_progres,
       task_date,
       task_duedate,
-      task_docs,
+      task_docs, // MANDATORY (Wajib)
+      feedback,
       id_pic,
       id_svp,
       id_priority,
     } = req.body;
 
+    // Tambahkan task_docs ke dalam syarat validasi IF
     if (
-      (id_point,
-      task_name,
-      task_progres,
-      task_date,
-      task_duedate,
-      task_docs,
-      id_pic,
-      id_svp,
-      id_priority)
+      id_point && 
+      task_name && 
+      task_progres && 
+      task_date && 
+      task_docs && // Wajib ada isinya
+      id_pic && 
+      id_svp && 
+      id_priority
     ) {
-      //  create and assign task
+      
+      // Logika upload untuk file fisik (OPTIONAL)
+      let taskFilePath = ''; 
+      if (req.file) {
+        taskFilePath = `assets/task/${req.file.filename}`;
+      }
+
       const newTaskData = {
         id_point: id_point,
         task_name: task_name,
         task_progres: task_progres,
         task_date: new Date(task_date),
         task_duedate: new Date(task_duedate),
-        task_docs: task_docs,
+        task_docs: task_docs, // Wajib dari req.body
+        task_file: taskFilePath, // Bisa kosong jika tidak upload
+        feedback: feedback || '',
         id_pic: id_pic,
         id_svp: id_svp,
         priority_id: id_priority,
@@ -116,18 +187,21 @@ export const createNassignTask = async (req, res) => {
 
       const task = new Task(newTaskData);
       await task.save();
+
       res.status(201).json({
         status: true,
         message: "Task created successfully",
         data: newTaskData,
       });
     } else {
+      // Jika task_docs kosong, akan lari ke sini
       res.status(400).json({
         status: false,
-        message: "fields is required",
+        message: "Fields 'task_docs' and other main fields are required",
       });
     }
   } catch (error) {
+    console.error("Error creating task:", error);
     res.status(500).json({
       status: false,
       message: "Error when creating task",
@@ -171,6 +245,7 @@ export const updateTask = async (req, res) => {
       task_date,
       task_duedate,
       task_docs,
+      feedback,
       id_pic,
       id_svp,
     } = req.body;
@@ -183,6 +258,7 @@ export const updateTask = async (req, res) => {
       task_date: new Date(task_date),
       task_duedate: new Date(task_duedate),
       task_docs: task_docs,
+      feedback: feedback,
       id_pic: id_pic,
       id_svp: id_svp,
     };
@@ -234,6 +310,7 @@ export const downloadReport = async (req, res) => {
 
   // User Information
   const user = tasks[0];
+  console.log("🔥",tasks);
   doc
     .fontSize(14)
     .font("Helvetica-Bold")
@@ -281,7 +358,7 @@ export const downloadReport = async (req, res) => {
       .text(task.id, 50, rowTop, { width: 50, align: "left" })
       .text(task.task_name, 100, rowTop, { width: 200, align: "left" })
       .text(task.priority, 300, rowTop, { width: 80, align: "center" })
-      .text(task.task_progress, 380, rowTop, { width: 80, align: "center" })
+      .text(task.task_progres, 380, rowTop, { width: 80, align: "center" })
       .text(task.point, 460, rowTop, { width: 50, align: "right" });
     doc.moveDown(0.5);
   });
@@ -299,3 +376,4 @@ export const downloadReport = async (req, res) => {
 
   doc.end();
 };
+
