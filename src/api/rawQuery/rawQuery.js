@@ -121,15 +121,39 @@ export const getTaskByUserId = (id, priority, task_progres, dateTime, keyword, t
 
 
 export const getTaskByTaskId = (id) => {
+  // let query =
+  //   "SELECT task.id, task.task_name, " +
+  //   "task.id_pic, task.id_svp, point.id_point, " +
+  //   "task.task_progres, task.task_date, " +
+  //   "task.task_duedate, task.task_docs,  task.feedback, " +
+  //   "users.username, users.email, point.point, " +
+  //   "priority.priority_name as priority " +
+  //   "FROM `task` " +
+  //   "INNER JOIN users ON task.id_pic = users.id " +
+  //   "INNER JOIN point ON task.id_point = point.id_point " +
+  //   "INNER JOIN priority ON task.priority_id = priority.id_priority " +
+  //   "WHERE task.id = " + id;
+
   let query =
-    "SELECT task.id, task.task_name, " +
-    "task.id_pic, task.id_svp, point.id_point, " +
-    "task.task_progres, task.task_date, " +
-    "task.task_duedate, task.task_docs,  task.feedback, " +
-    "users.username, users.email, point.point, " +
+    "SELECT " +
+    "task.id, " +
+    "task.task_name, " +
+    "task.task_progres, " +
+    "task.task_date, " +
+    "task.task_duedate, " +
+    "task.task_docs, " +
+    "task.feedback, " +
+    "task.id_pic, " +
+    "pic.username as username, " +
+    "task.id_svp, " +
+    "svp.username as svp_name, " + // Nama Pemberi (SVP)
+    "pic.email as email, " +
+    "point.id_point, " +
+    "point.point, " +
     "priority.priority_name as priority " +
     "FROM `task` " +
-    "INNER JOIN users ON task.id_pic = users.id " +
+    "INNER JOIN users as pic ON task.id_pic = pic.id " + // Alias pic
+    "LEFT JOIN users as svp ON task.id_svp = svp.id " +  // Alias svp (pakai LEFT JOIN agar aman jika SVP kosong)
     "INNER JOIN point ON task.id_point = point.id_point " +
     "INNER JOIN priority ON task.priority_id = priority.id_priority " +
     "WHERE task.id = " + id;
@@ -162,7 +186,7 @@ export const updateRewardQuery = () => {
             SET title = :title, reward_name = :reward_name, voucher_code = :voucher_code, updated_at = NOW() 
             WHERE id_reward = :id`;
 };
-
+           
 export const deleteRewardQuery = () => {
     return `DELETE FROM reward WHERE id_reward = :id`;
 };

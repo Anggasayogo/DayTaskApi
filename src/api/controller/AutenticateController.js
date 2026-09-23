@@ -131,7 +131,7 @@ export const getUsersList = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { id } = req.params; // ID pengguna dari parameter URL
-    const { username, email, phone, role_id, divisi_id, password } = req.body; 
+    const { username, email, phone, role_id, divisi_id } = req.body; // Hapus password dari sini
     const host = `${req.protocol}://${req.get('host')}`;
 
     // Cek apakah pengguna ada
@@ -164,15 +164,13 @@ export const updateProfile = async (req, res) => {
       avatarPath = `assets/${req.file.filename}`; 
     }
 
-     const hashedPassword = await argon2.hash(password);
-    // Update data pengguna
+    // Update data pengguna (Tanpa Password)
     user.username = username || user.username;
     user.email = email || user.email;
     user.phone = phone || user.phone;
     user.avatar = avatarPath || user.avatar;
     user.role_id = role_id || user.role_id;
     user.divisi_id = divisi_id || user.divisi_id;
-    user.password = hashedPassword || user.password;
 
     // Simpan perubahan ke database
     await user.save();
@@ -199,6 +197,62 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  try {
+    const { id } = req.params; // ID dari URL
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    // 1. Validasi Input
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        status: false,
+        message: "Semua field password harus diisi"
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        status: false,
+        message: "Konfirmasi password baru tidak cocok"
+      });
+    }
+
+    // 2. Cari User
+    const user = await Users.findOne({ where: { id } });
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User tidak ditemukan"
+      });
+    }
+
+    // 3. Verifikasi Password Lama
+    const isPasswordValid = await argon2.verify(user.password, oldPassword);
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        status: false,
+        message: "Password lama salah"
+      });
+    }
+
+    // 4. Hash Password Baru & Simpan
+    const hashedPassword = await argon2.hash(newPassword);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({
+      status: true,
+      message: "Password berhasil diperbarui"
+    });
+
+  } catch (error) {
+    console.error("Error change password:", error);
+    res.status(500).json({
+      status: false,
+      message: "Terjadi kesalahan pada server"
+    });
+  }
+};
 
 export const test = async (req, res) => {
   try {

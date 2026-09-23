@@ -14,4 +14,5 @@ router.post('/login', _AutenticateController.login);
 router.get('/test', _AutenticateController.test);
 router.get('/user/list', _authMiddleware["default"], _AutenticateController.getUsersList);
 router.put('/user/update/:id', _authMiddleware["default"], _storage.upload.single('avatar'), _AutenticateController.updateProfile);
+router.post('/user/changge-pwd/:id', _authMiddleware["default"], _AutenticateController.changePassword);
 var _default = exports["default"] = router;

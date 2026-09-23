@@ -79,7 +79,26 @@ var getTaskByUserId = exports.getTaskByUserId = function getTaskByUserId(id, pri
   return query;
 };
 var getTaskByTaskId = exports.getTaskByTaskId = function getTaskByTaskId(id) {
-  var query = "SELECT task.id, task.task_name, " + "task.id_pic, task.id_svp, point.id_point, " + "task.task_progres, task.task_date, " + "task.task_duedate, task.task_docs,  task.feedback, " + "users.username, users.email, point.point, " + "priority.priority_name as priority " + "FROM `task` " + "INNER JOIN users ON task.id_pic = users.id " + "INNER JOIN point ON task.id_point = point.id_point " + "INNER JOIN priority ON task.priority_id = priority.id_priority " + "WHERE task.id = " + id;
+  // let query =
+  //   "SELECT task.id, task.task_name, " +
+  //   "task.id_pic, task.id_svp, point.id_point, " +
+  //   "task.task_progres, task.task_date, " +
+  //   "task.task_duedate, task.task_docs,  task.feedback, " +
+  //   "users.username, users.email, point.point, " +
+  //   "priority.priority_name as priority " +
+  //   "FROM `task` " +
+  //   "INNER JOIN users ON task.id_pic = users.id " +
+  //   "INNER JOIN point ON task.id_point = point.id_point " +
+  //   "INNER JOIN priority ON task.priority_id = priority.id_priority " +
+  //   "WHERE task.id = " + id;
+
+  var query = "SELECT " + "task.id, " + "task.task_name, " + "task.task_progres, " + "task.task_date, " + "task.task_duedate, " + "task.task_docs, " + "task.feedback, " + "task.id_pic, " + "pic.username as username, " + "task.id_svp, " + "svp.username as svp_name, " +
+  // Nama Pemberi (SVP)
+  "pic.email as email, " + "point.id_point, " + "point.point, " + "priority.priority_name as priority " + "FROM `task` " + "INNER JOIN users as pic ON task.id_pic = pic.id " +
+  // Alias pic
+  "LEFT JOIN users as svp ON task.id_svp = svp.id " +
+  // Alias svp (pakai LEFT JOIN agar aman jika SVP kosong)
+  "INNER JOIN point ON task.id_point = point.id_point " + "INNER JOIN priority ON task.priority_id = priority.id_priority " + "WHERE task.id = " + id;
   return query;
 };
 var getRewardById = exports.getRewardById = function getRewardById() {

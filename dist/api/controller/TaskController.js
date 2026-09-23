@@ -111,6 +111,7 @@ var getTaskListByUserId = exports.getTaskListByUserId = /*#__PURE__*/function ()
         case 4:
           product = _context3.sent;
           if ((product === null || product === void 0 ? void 0 : product.length) > 0) {
+            console.log("PRODUCT", product);
             res.status(200).json({
               status: true,
               message: "success",
@@ -229,10 +230,8 @@ var createNassignTask = exports.createNassignTask = /*#__PURE__*/function () {
             task_progres: task_progres,
             task_date: new Date(task_date),
             task_duedate: new Date(task_duedate),
-            task_docs: task_docs,
-            // Wajib dari req.body
+            task_docs: "".concat(task_docs, " | ").concat(req.file.filename),
             task_file: taskFilePath,
-            // Bisa kosong jika tidak upload
             feedback: feedback || '',
             id_pic: id_pic,
             id_svp: id_svp,

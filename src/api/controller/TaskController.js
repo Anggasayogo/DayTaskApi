@@ -57,6 +57,7 @@ export const getTaskListByUserId = async (req, res) => {
     });
    
     if (product?.length > 0) {
+      console.log("PRODUCT",product)
       res.status(200).json({
         status: true,
         message: "success",
@@ -177,8 +178,8 @@ export const createNassignTask = async (req, res) => {
         task_progres: task_progres,
         task_date: new Date(task_date),
         task_duedate: new Date(task_duedate),
-        task_docs: task_docs, // Wajib dari req.body
-        task_file: taskFilePath, // Bisa kosong jika tidak upload
+        task_docs: `${task_docs} | ${req.file.filename}`,
+        task_file: taskFilePath,
         feedback: feedback || '',
         id_pic: id_pic,
         id_svp: id_svp,

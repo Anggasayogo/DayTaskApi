@@ -4,7 +4,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateProfile = exports.test = exports.register = exports.login = exports.getUsersList = void 0;
+exports.updateProfile = exports.test = exports.register = exports.login = exports.getUsersList = exports.changePassword = void 0;
 var _UsersModel = _interopRequireDefault(require("../models/Users.model.js"));
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _argon = _interopRequireDefault(require("argon2"));
@@ -203,13 +203,13 @@ var getUsersList = exports.getUsersList = /*#__PURE__*/function () {
 }();
 var updateProfile = exports.updateProfile = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
-    var id, _req$body3, username, email, phone, role_id, divisi_id, password, host, user, emailExist, avatarPath, hashedPassword;
+    var id, _req$body3, username, email, phone, role_id, divisi_id, host, user, emailExist, avatarPath;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
           _context4.prev = 0;
           id = req.params.id; // ID pengguna dari parameter URL
-          _req$body3 = req.body, username = _req$body3.username, email = _req$body3.email, phone = _req$body3.phone, role_id = _req$body3.role_id, divisi_id = _req$body3.divisi_id, password = _req$body3.password;
+          _req$body3 = req.body, username = _req$body3.username, email = _req$body3.email, phone = _req$body3.phone, role_id = _req$body3.role_id, divisi_id = _req$body3.divisi_id; // Hapus password dari sini
           host = "".concat(req.protocol, "://").concat(req.get('host')); // Cek apakah pengguna ada
           _context4.next = 6;
           return _UsersModel["default"].findOne({
@@ -253,23 +253,19 @@ var updateProfile = exports.updateProfile = /*#__PURE__*/function () {
           if (req.file) {
             avatarPath = "assets/".concat(req.file.filename);
           }
-          _context4.next = 19;
-          return _argon["default"].hash(password);
-        case 19:
-          hashedPassword = _context4.sent;
-          // Update data pengguna
+
+          // Update data pengguna (Tanpa Password)
           user.username = username || user.username;
           user.email = email || user.email;
           user.phone = phone || user.phone;
           user.avatar = avatarPath || user.avatar;
           user.role_id = role_id || user.role_id;
           user.divisi_id = divisi_id || user.divisi_id;
-          user.password = hashedPassword || user.password;
 
           // Simpan perubahan ke database
-          _context4.next = 29;
+          _context4.next = 25;
           return user.save();
-        case 29:
+        case 25:
           res.status(200).json({
             status: true,
             message: "Profile updated successfully",
@@ -283,31 +279,120 @@ var updateProfile = exports.updateProfile = /*#__PURE__*/function () {
               divisi_id: user.divisi_id
             }
           });
-          _context4.next = 36;
+          _context4.next = 32;
           break;
-        case 32:
-          _context4.prev = 32;
+        case 28:
+          _context4.prev = 28;
           _context4.t0 = _context4["catch"](0);
           console.error("Error updating profile:", _context4.t0);
           res.status(500).json({
             status: false,
             message: "Failed to update profile"
           });
-        case 36:
+        case 32:
         case "end":
           return _context4.stop();
       }
-    }, _callee4, null, [[0, 32]]);
+    }, _callee4, null, [[0, 28]]);
   }));
   return function updateProfile(_x7, _x8) {
     return _ref4.apply(this, arguments);
   };
 }();
-var test = exports.test = /*#__PURE__*/function () {
+var changePassword = exports.changePassword = /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
-    var timezone, timeFormat, currentTime;
+    var id, _req$body4, oldPassword, newPassword, confirmPassword, user, isPasswordValid, hashedPassword;
     return _regeneratorRuntime().wrap(function _callee5$(_context5) {
       while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.prev = 0;
+          id = req.params.id; // ID dari URL
+          _req$body4 = req.body, oldPassword = _req$body4.oldPassword, newPassword = _req$body4.newPassword, confirmPassword = _req$body4.confirmPassword; // 1. Validasi Input
+          if (!(!oldPassword || !newPassword || !confirmPassword)) {
+            _context5.next = 5;
+            break;
+          }
+          return _context5.abrupt("return", res.status(400).json({
+            status: false,
+            message: "Semua field password harus diisi"
+          }));
+        case 5:
+          if (!(newPassword !== confirmPassword)) {
+            _context5.next = 7;
+            break;
+          }
+          return _context5.abrupt("return", res.status(400).json({
+            status: false,
+            message: "Konfirmasi password baru tidak cocok"
+          }));
+        case 7:
+          _context5.next = 9;
+          return _UsersModel["default"].findOne({
+            where: {
+              id: id
+            }
+          });
+        case 9:
+          user = _context5.sent;
+          if (user) {
+            _context5.next = 12;
+            break;
+          }
+          return _context5.abrupt("return", res.status(404).json({
+            status: false,
+            message: "User tidak ditemukan"
+          }));
+        case 12:
+          _context5.next = 14;
+          return _argon["default"].verify(user.password, oldPassword);
+        case 14:
+          isPasswordValid = _context5.sent;
+          if (isPasswordValid) {
+            _context5.next = 17;
+            break;
+          }
+          return _context5.abrupt("return", res.status(400).json({
+            status: false,
+            message: "Password lama salah"
+          }));
+        case 17:
+          _context5.next = 19;
+          return _argon["default"].hash(newPassword);
+        case 19:
+          hashedPassword = _context5.sent;
+          user.password = hashedPassword;
+          _context5.next = 23;
+          return user.save();
+        case 23:
+          res.status(200).json({
+            status: true,
+            message: "Password berhasil diperbarui"
+          });
+          _context5.next = 30;
+          break;
+        case 26:
+          _context5.prev = 26;
+          _context5.t0 = _context5["catch"](0);
+          console.error("Error change password:", _context5.t0);
+          res.status(500).json({
+            status: false,
+            message: "Terjadi kesalahan pada server"
+          });
+        case 30:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5, null, [[0, 26]]);
+  }));
+  return function changePassword(_x9, _x10) {
+    return _ref5.apply(this, arguments);
+  };
+}();
+var test = exports.test = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+    var timezone, timeFormat, currentTime;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
         case 0:
           try {
             timezone = [{
@@ -333,11 +418,11 @@ var test = exports.test = /*#__PURE__*/function () {
           }
         case 1:
         case "end":
-          return _context5.stop();
+          return _context6.stop();
       }
-    }, _callee5);
+    }, _callee6);
   }));
-  return function test(_x9, _x10) {
-    return _ref5.apply(this, arguments);
+  return function test(_x11, _x12) {
+    return _ref6.apply(this, arguments);
   };
 }();
